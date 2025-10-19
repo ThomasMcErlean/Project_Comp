@@ -1,5 +1,3 @@
-<!--Vue JS Code-->
-
 <script>
 export default {
   data() {
@@ -135,9 +133,9 @@ export default {
   }
 }
 </script>
+
 <template>
-  <!--Bootstrap Container begins-->
-  <div class="container">
+    <div class="container">
     <div class="row">
       <!-- Offcanvas Sidebar -->
       <div class="offcanvas offcanvas-end" id="basket-sidebar">
@@ -290,5 +288,4 @@ export default {
       </div>
     </div>
   </div>
-  <router-view></router-view>
 </template>

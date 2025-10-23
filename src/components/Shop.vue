@@ -129,6 +129,12 @@ export default {
       
       formulae=Math.pow(Math.sin(Δ_lat/2), 2)+Math.pow(Math.sin(Δ_long/2), 2)*Math.cos(lat_1)*Math.cos(lat_2);
 
+    },
+    send_To_Checkout(){
+      console.log(this.basket);
+      this.$emit("toggle-basket", this.basket);
+      this.$router.push('/Checkout')
+
     }
   }
 }
@@ -155,7 +161,7 @@ export default {
               <button class="btn btn-danger" @click="remove_From_Basket(index)">Remove</button>
             </div>
           </div>
-          <button class="btn btn-secondary" type="button">A Button</button>
+          <button class="btn btn-secondary" type="button" @click="send_To_Checkout">A Button</button>
         </div>
       </div>
       <div class="column-sm-12">

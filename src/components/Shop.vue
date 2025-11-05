@@ -1,4 +1,6 @@
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -35,6 +37,8 @@ export default {
       sorting: ["", false, ""],
 
     };
+  },
+  computed: {
   },
   methods: {
     //Removes lessons from lesson list
@@ -87,6 +91,9 @@ export default {
     remove_From_Basket(lesson_Id) {
       if (this.basket[lesson_Id].Quantity === 1) {
         this.basket.splice(lesson_Id, 1);
+      } else {
+        let Basket_Item = this.basket[lesson_Id];
+        Object.defineProperty(Basket_Item, "Quantity", { value: this.basket[lesson_Id].Quantity - 1 });
       }
     },
     reverse_Unreverse_Array(lessons) {
@@ -133,8 +140,16 @@ export default {
     send_To_Checkout(){
       console.log(this.basket);
       this.$emit("toggle-basket", this.basket);
-      this.$router.push('/Checkout')
-
+      this.$router.push("/Checkout");
+    }
+  },
+  mounted(){
+    try{
+    axios.get("http://localhost:3000/").then(response => (this.lessons=response.data))
+    console.log(this.lessons);
+    console.log("oh yes!");
+    } catch(err){
+      console.log("oh no !"+err);
     }
   }
 }
@@ -143,6 +158,7 @@ export default {
 <template>
     <div class="container">
     <div class="row">
+    <p>{{lessons}}</p>
       <!-- Offcanvas Sidebar -->
       <div class="offcanvas offcanvas-end" id="basket-sidebar">
         <div class="offcanvas-header">

@@ -12,9 +12,10 @@ export default {
 <template>
     <div class="container">
         <div class="row">
-            <p>{{ $route.params.confirmation }}</p>
-            <p>{{ confirmation }}</p>
-            <div class="col-4 text-center">
+            <div class="col-xs-4">
+                <button class="btn btn-primary my-3" @click="this.$router.push('/')">Go back to shopping page</button>
+            </div>
+            <div class="col-4 text-center y-3">
                 <div v-if="confirmation === 'Success'" class="border border-success border-3">
                     <h1 class="text-success">Checkout Success</h1>
                     <img class="rounded-circle"></img>
@@ -28,7 +29,6 @@ export default {
                     <p class="text-danger">Order failed.</p>
                 </div>
             </div>
-            <button @click="this.$router.push('/')">Go back to shopping page</button>
         </div>
     </div>
 </template>

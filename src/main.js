@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
+import axios from 'axios'
 import App from './App.vue'
 import Checkout from './components/Checkout.vue'
 import Shop from './components/Shop.vue'

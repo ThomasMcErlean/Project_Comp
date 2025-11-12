@@ -51,6 +51,7 @@ export default {
 <template>
   <div class="container">
     <div class="row">
+      <PhoneInput></PhoneInput>
       <IntlTelInput
     :options="{
       initialCountry: 'us',

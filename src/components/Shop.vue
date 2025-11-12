@@ -108,6 +108,7 @@ export default {
         /*The second position is related to the check box to only show available lessons 
         if this checkbox is called the function to remove unavailable lessons is called*/
         else if (i === 1) {
+          //Kate is an idiot fix this immediately 
           if (filters[i] === true) {
             this.out_Of_Spaces_Remove(this.lessons);
           }
@@ -133,9 +134,7 @@ export default {
       //difference between 2 longitude degrees given
       Δ_long=Math.abs(long_1-long_2);
       Δ_long=this.convert_To_Radians(Δ_long);
-      
       formulae=Math.pow(Math.sin(Δ_lat/2), 2)+Math.pow(Math.sin(Δ_long/2), 2)*Math.cos(lat_1)*Math.cos(lat_2);
-
     },
     send_To_Checkout(){
       console.log(this.basket);
@@ -146,6 +145,8 @@ export default {
   mounted(){
     try{
     axios.get("http://localhost:3000/").then(response => (this.lessons=response.data))
+    //this.lessons=JSON.parse(this.lessons);
+    //this.lessons.forEach((element, index) => {this.lessons[index]=JSON.parse(element)});
     console.log(this.lessons);
     console.log("oh yes!");
     } catch(err){

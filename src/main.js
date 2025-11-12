@@ -5,6 +5,7 @@ import App from './App.vue'
 import Checkout from './components/Checkout.vue'
 import Shop from './components/Shop.vue'
 import CheckoutConfirm from './components/CheckoutConfirm.vue'
+import PhoneInput from './components/PhoneInput.vue';
 const router= createRouter({
     history: createWebHistory(),
     routes: [
@@ -13,4 +14,6 @@ const router= createRouter({
         {path: '/Checkout/:confirmation', component:CheckoutConfirm, props: true}
     ]
 })
-createApp(App).use(router).mount('#app')
+const app=createApp(App)
+app.component('PhoneInput', PhoneInput)
+app.use(router).mount('#app')

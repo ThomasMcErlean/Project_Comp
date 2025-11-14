@@ -45,18 +45,16 @@ export default {
         $('#ErrorModal').modal('toggle');
       }
     },
+    test(phone_Input){
+      this.phone_Number=phone_Input;
+    }
   }
 };
 </script>
 <template>
   <div class="container">
     <div class="row">
-      <PhoneInput></PhoneInput>
-      <IntlTelInput
-    :options="{
-      initialCountry: 'us',
-    }"
-  />
+  <p>{{this.phone_Number}}</p>
       <!--Button to link to shopping page-->
       <div class="col-xs-4">
         <button class="btn btn-primary my-3" @click="this.$router.push('/')">Go back to shopping page</button>
@@ -73,8 +71,8 @@ export default {
         </div>
         <!--Phone input section-->
         <div class="col-xs-4">
-          <label for="phone_Input" class="form-label">Phone Number</label>
-          <input id="phone_Input" type="tel" v-model="phone_Number"></input>
+          <label for="phone" class="form-label">Phone Number</label>
+          <PhoneInput id="phone" @toggle-phone-input="test"></PhoneInput>
           <!--When the checkout function is called this text will appear if the phone number inputted doesn't pass the regex check function-->
           <p class="text-danger" v-if="input_Error === true">Please enter a valid phone number.</p>
         </div>

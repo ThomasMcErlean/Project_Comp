@@ -1,6 +1,7 @@
 <script>
 import IntlTelInput from "intl-tel-input/vueWithUtils";
 import "intl-tel-input/styles";
+import axios from "axios";
 export default {
   
   props: ["basket_Data"],
@@ -9,7 +10,8 @@ export default {
       basket_Checkout: this.basket_Data,
       name: "",
       phone_Number: "",
-      input_Error: false
+      input_Error: false,
+      checkout_Response:{}
     }
   },
   methods: {
@@ -47,6 +49,9 @@ export default {
     },
     test(phone_Input){
       this.phone_Number=phone_Input;
+    },
+    async checkout(order){
+      const request= await axios.post("http://localhost:3000/", order).then(response => (this.checkout_Response=response.data))
     }
   }
 };

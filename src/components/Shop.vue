@@ -140,6 +140,13 @@ export default {
       console.log(this.basket);
       this.$emit("toggle-basket", this.basket);
       this.$router.push("/Checkout");
+    },
+    async search(query){
+      const res = await axios.get("http://localhost:3000/search", { params: { search: query } }).then(response => (this.lessons=response.data));
+    },
+    async search2(event){
+      const query=event.target.value;
+      const res = await axios.get("http://localhost:3000/search", { params: { search: query } }).then(response => (this.lessons=response.data));
     }
   },
   mounted(){
@@ -289,7 +296,7 @@ export default {
         <!--div class "input-group" for formatting and styling the search bar-->
         <div class="input-group">
           <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-          <input type="text float-start" class="form-control" placeholder="Search...">
+          <input type="text float-start" class="form-control" placeholder="Search..."  @keyup.enter="search2">
         </div>
         <!--Render lessons for user-->
         <div class="row row-cols-2">

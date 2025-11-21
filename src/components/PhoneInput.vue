@@ -52,7 +52,7 @@ export default {
                     <ul class="dropdown-menu" style="max-height: 250px; overflow-y: scroll;">
                         <li v-for="(country_Code, index) in country_Code_Numbers()"
                             @click="model_Update(country_Code_Flag()[index], this.phone_Text, index)"><a
-                                class="dropdown-item" href="#"><img :src="country_Code_Flag()[index]"> +{{ country_Code
+                                class="dropdown-item"><img :src="country_Code_Flag()[index]"> +{{ country_Code
                                 }}</a>
                         </li>
                     </ul>

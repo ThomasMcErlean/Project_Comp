@@ -83,8 +83,7 @@ export default {
         const index = this.basket.findIndex((element) => element.Subject == lesson.Subject);
         let Basket_Item = this.basket[index];
         Object.defineProperty(Basket_Item, "Quantity", { value: this.basket[index].Quantity + 1 });
-        this.basket.splice(index, 1);
-        this.basket.push(Basket_Item);
+        this.$forceUpdate();
       }
     },
     //Removes a lesson from the basket list
@@ -93,7 +92,9 @@ export default {
         this.basket.splice(lesson_Id, 1);
       } else {
         let Basket_Item = this.basket[lesson_Id];
+        console.log(this.basket[lesson_Id].Quantity)
         Object.defineProperty(Basket_Item, "Quantity", { value: this.basket[lesson_Id].Quantity - 1 });
+        this.$forceUpdate();
       }
     },
     reverse_Unreverse_Array(lessons) {
@@ -151,7 +152,8 @@ export default {
   },
   mounted(){
     try{
-    axios.get("http://localhost:3000/").then(response => (this.lessons=response.data))
+    fetch('http://localhost:3000/').then(response => response.json()).then(response => this.lessons=response)
+    //axios.get("http://localhost:3000/").then(response => (this.lessons=response.data))
     //this.lessons=JSON.parse(this.lessons);
     //this.lessons.forEach((element, index) => {this.lessons[index]=JSON.parse(element)});
     console.log(this.lessons);
@@ -181,7 +183,7 @@ export default {
               <p class="card-text">Location: {{ lesson.Location }}</p>
               <p class="card-text">Price: £{{ lesson.Price }}</p>
               <p class="card-text">Available Spaces:{{ lesson.Spaces }}</p>
-              <p class="card-text">Available Spaces:{{ lesson.Quantity }}</p>
+              <p class="card-text">Quantity:{{ lesson.Quantity }}</p>
               <button class="btn btn-danger" @click="remove_From_Basket(index)">Remove</button>
             </div>
           </div>
@@ -252,7 +254,7 @@ export default {
                   <form>
                     <div class="form-check" value="Any subject">
                       <input class="form-check-input" type="radio" name="subject-group" id="Any Subject"
-                        value="Any Subject" v-model="sorting[2]">
+                        value="Any Subject" v-model="sorting[2]" checked>
                       <label class="form-check-label" for="Any Subject">Any Subject</label>
                     </div>
                     <div class="form-check" v-for="lesson in lessons" value={{lesson.Subject}}>

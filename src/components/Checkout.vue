@@ -3,7 +3,7 @@ import IntlTelInput from "intl-tel-input/vueWithUtils";
 import "intl-tel-input/styles";
 import axios from "axios";
 export default {
-  
+
   props: ["basket_Data"],
   data() {
     return {
@@ -11,7 +11,7 @@ export default {
       name: "",
       phone_Number: "",
       input_Error: false,
-      checkout_Response:{}
+      checkout_Response: {}
     }
   },
   methods: {
@@ -29,7 +29,7 @@ export default {
     it returns either true or false if the regex test is passed or failed*/
     phone_Validation(phone_Number) {
       phone_Number = phone_Number.replace(/\s/g, "0");
-      const phone_Regex = /^\d+$/;
+      const phone_Regex = /(?:[\s-]?(?:x|ext\.?|\#)\d{3,4})?/;
       let phone_Regex_Match = phone_Regex.test(phone_Number);
       return phone_Regex_Match;
     },
@@ -40,18 +40,26 @@ export default {
       if (this.name_Validation(checkout_Name) && this.phone_Validation(checkout_Phone_Number)) {
         this.input_Error = false;
         this.$router.push('/Checkout/Success');
-      /*if validation fails input error is changed to true displaying error messages under the text boxes and displaying the error
-      modal*/
+        /*if validation fails input error is changed to true displaying error messages under the text boxes and displaying the error
+        modal*/
       } else {
         this.input_Error = true;
         $('#ErrorModal').modal('toggle');
       }
     },
-    test(phone_Input){
-      this.phone_Number=phone_Input;
+    test(phone_Input) {
+      this.phone_Number = phone_Input;
     },
-    async checkout(order){
-      const request= await axios.post("http://localhost:3000/", order).then(response => (this.checkout_Response=response.data))
+    async checkout(basket, checkout_Name, checkout_Phone) {
+      const order={name: checkout_Name, phone:checkout_Phone, basket:basket};
+      try {
+        if (this.checkout_Test(this.name, this.phone_Number)) {
+          const request = await axios.post("http://localhost:3000/", { data: order }).then(response => (this.checkout_Response = response.data));
+          this.input_Error = false;
+          this.$router.push('/Checkout/Success');
+        }
+      } catch (error) {
+      }
     }
   }
 };
@@ -59,7 +67,7 @@ export default {
 <template>
   <div class="container">
     <div class="row">
-  <p>{{this.phone_Number}}</p>
+      <p>{{ this.phone_Number }}</p>
       <!--Button to link to shopping page-->
       <div class="col-xs-4">
         <button class="btn btn-primary my-3" @click="this.$router.push('/')">Go back to shopping page</button>
@@ -75,12 +83,9 @@ export default {
           <p class="text-danger" v-if="input_Error === true">Please enter a valid name.</p>
         </div>
         <!--Phone input section-->
-        <div class="col-xs-4">
-          <label for="phone" class="form-label">Phone Number</label>
-          <PhoneInput id="phone" @toggle-phone-input="test"></PhoneInput>
-          <!--When the checkout function is called this text will appear if the phone number inputted doesn't pass the regex check function-->
-          <p class="text-danger" v-if="input_Error === true">Please enter a valid phone number.</p>
-        </div>
+        <PhoneInput id="phone" @toggle-phone-input="test"></PhoneInput>
+        <!--When the checkout function is called this text will appear if the phone number inputted doesn't pass the regex check function-->
+        <p class="text-danger" v-if="input_Error === true">Please enter a valid phone number.</p>
         <h2>Basket</h2>
         <!--Displays users basket if there any items in the basket.-->
         <div v-if="basket_Checkout.length > 0" v-for="lesson in basket_Checkout" class="col">

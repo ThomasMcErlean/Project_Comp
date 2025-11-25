@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fawmi/vue-google-maps": "^0.9.79",
     "axios": "^1.13.1",
     "boostrap": "^2.0.0",
     "intl-tel-input": "^25.12.1",

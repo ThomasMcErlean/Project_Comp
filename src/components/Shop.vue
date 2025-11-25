@@ -4,6 +4,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      Auto_Complete: "",
       //Dummy list of lessons
       lessons: [
         { Subject: 'German', Location: 'NW0 0ZZ', Price: 40, Spaces: 0, Icon: 'fa-solid fa-language' },
@@ -124,51 +125,50 @@ export default {
       }
     },
     //function that converts degrees to radians
-    convert_To_Radians(degree){
-      return degree*Math.PI/180;
+    convert_To_Radians(degree) {
+      return degree * Math.PI / 180;
     },
-    haversine_Formula(lat_1, long_1, lat_2, long_2){
-      radius_Of_Earth=6,371;
+    haversine_Formula(lat_1, long_1, lat_2, long_2) {
+      radius_Of_Earth = 6, 371;
       //difference between 2 lattitude values given
-      Δ_lat=Math.abs(lat_1-lat_2);
-      Δ_lat=this.convert_To_Radians(Δ_lat);
+      Δ_lat = Math.abs(lat_1 - lat_2);
+      Δ_lat = this.convert_To_Radians(Δ_lat);
       //difference between 2 longitude degrees given
-      Δ_long=Math.abs(long_1-long_2);
-      Δ_long=this.convert_To_Radians(Δ_long);
-      formulae=Math.pow(Math.sin(Δ_lat/2), 2)+Math.pow(Math.sin(Δ_long/2), 2)*Math.cos(lat_1)*Math.cos(lat_2);
+      Δ_long = Math.abs(long_1 - long_2);
+      Δ_long = this.convert_To_Radians(Δ_long);
+      formulae = Math.pow(Math.sin(Δ_lat / 2), 2) + Math.pow(Math.sin(Δ_long / 2), 2) * Math.cos(lat_1) * Math.cos(lat_2);
     },
-    send_To_Checkout(){
+    send_To_Checkout() {
       console.log(this.basket);
       this.$emit("toggle-basket", this.basket);
       this.$router.push("/Checkout");
     },
-    async search(query){
-      const res = await axios.get("http://localhost:3000/search", { params: { search: query } }).then(response => (this.lessons=response.data));
+    async search(query) {
+      const res = await fetch('http://localhost:3000/').then(response => response.json()).then(response => this.lessons = response);
     },
-    async search2(event){
-      const query=event.target.value;
-      const res = await axios.get("http://localhost:3000/search", { params: { search: query } }).then(response => (this.lessons=response.data));
+    async search2(event) {
+      const query = event.target.value;
+      const res = await fetch('http://localhost:3000/search?'+ new URLSearchParams({
+        search: query
+      }).toString()).then(response => response.json()).then(response => this.lessons = response);
+      //const res = await axios.get("http://localhost:3000/search", { params: { search: query } }).then(response => (this.lessons=response.data));
     }
   },
-  mounted(){
-    try{
-    fetch('http://localhost:3000/').then(response => response.json()).then(response => this.lessons=response)
-    //axios.get("http://localhost:3000/").then(response => (this.lessons=response.data))
-    //this.lessons=JSON.parse(this.lessons);
-    //this.lessons.forEach((element, index) => {this.lessons[index]=JSON.parse(element)});
-    console.log(this.lessons);
-    console.log("oh yes!");
-    } catch(err){
-      console.log("oh no !"+err);
+  mounted() {
+    try {
+      fetch('http://localhost:3000/').then(response => response.json()).then(response => this.lessons = response);
+      console.log(this.lessons);
+      console.log("oh yes!");
+    } catch (err) {
+      console.log("oh no !" + err);
     }
   }
 }
 </script>
 
 <template>
-    <div class="container">
+  <div class="container">
     <div class="row">
-    <p>{{lessons}}</p>
       <!-- Offcanvas Sidebar -->
       <div class="offcanvas offcanvas-end" id="basket-sidebar">
         <div class="offcanvas-header">
@@ -298,7 +298,7 @@ export default {
         <!--div class "input-group" for formatting and styling the search bar-->
         <div class="input-group">
           <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
-          <input type="text float-start" class="form-control" placeholder="Search..."  @keyup.enter="search2">
+          <input type="text float-start" class="form-control" placeholder="Search..." @keyup.enter="search2">
         </div>
         <!--Render lessons for user-->
         <div class="row row-cols-2">

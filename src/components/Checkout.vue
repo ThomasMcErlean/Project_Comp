@@ -39,12 +39,14 @@ export default {
       return either true or false and this'll make the input error false if its true and then change page to checkout confirm success*/
       if (this.name_Validation(checkout_Name) && this.phone_Validation(checkout_Phone_Number)) {
         this.input_Error = false;
-        this.$router.push('/Checkout/Success');
+        //this.$router.push('/Checkout/Success');
         /*if validation fails input error is changed to true displaying error messages under the text boxes and displaying the error
         modal*/
+        return true;
       } else {
         this.input_Error = true;
         $('#ErrorModal').modal('toggle');
+        return false;
       }
     },
     test(phone_Input) {
@@ -52,9 +54,16 @@ export default {
     },
     async checkout(basket, checkout_Name, checkout_Phone) {
       const order={name: checkout_Name, phone:checkout_Phone, basket:basket};
+      console.log(order);
       try {
-        if (this.checkout_Test(this.name, this.phone_Number)) {
-          const request = await axios.post("http://localhost:3000/", { data: order }).then(response => (this.checkout_Response = response.data));
+        if (this.checkout_Test(checkout_Name, checkout_Phone)) {
+          const request_Options={
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(order)
+          }
+          const response=await fetch("http://localhost:3000/orders", request_Options).then(response => response.json()).then(response => this.$router.push('/Checkout/Success'))
+          //const request = await axios.post("http://localhost:3000/", { data: order }).then(response => (this.checkout_Response = response.data));
           this.input_Error = false;
           this.$router.push('/Checkout/Success');
         }
@@ -107,7 +116,7 @@ export default {
         </div>
         <!--Button to call the checkout function and validate checkout before sending the user to checkout confirm page.-->
         <div class="col-xs-4">
-          <button type="button" class="btn btn-primary" @click="checkout_Test(name, phone_Number)">Checkout</button>
+          <button type="button" class="btn btn-primary" @click="checkout(basket_Checkout, name, phone_Number)">Checkout</button>
         </div>
       </div>
     </div>

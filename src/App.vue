@@ -27,10 +27,6 @@ export default {
 }
 </script>
 <template>
-  <p>{{ test }}</p>
-   <GMapAutocomplete
-         @place_changed="setPlace"
-    />
   <RouterView :key="$route.path" @toggle-basket="update_Basket_Data" :basket_Data="basket_App" >
   </RouterView>
 </template>

@@ -1,9 +1,6 @@
 <script>
-import IntlTelInput from "intl-tel-input/vueWithUtils";
 import "intl-tel-input/styles";
-import axios from "axios";
 export default {
-
   props: ["basket_Data"],
   data() {
     return {
@@ -52,20 +49,29 @@ export default {
     test(phone_Input) {
       this.phone_Number = phone_Input;
     },
+    async space_Update(space_Basket){
+      for (let i = 0; i < space_Basket.length; i++) {
+        const request_Options={
+            method: "PUT",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({_id:space_Basket[i]._id, Spaces:space_Basket[i].Spaces})
+          }
+          const response= await fetch("https://project-comp-express-middleware.onrender.com/lessons", request_Options);
+      }
+    },
     async checkout(basket, checkout_Name, checkout_Phone) {
       const order={name: checkout_Name, phone:checkout_Phone, basket:basket};
       console.log(order);
       try {
         if (this.checkout_Test(checkout_Name, checkout_Phone)) {
+          this.space_Update(basket);
           const request_Options={
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(order)
           }
-          const response=await fetch("http://localhost:3000/orders", request_Options).then(response => response.json()).then(response => this.$router.push('/Checkout/Success'))
-          //const request = await axios.post("http://localhost:3000/", { data: order }).then(response => (this.checkout_Response = response.data));
+          const response=await fetch("https://project-comp-express-middleware.onrender.com/orders", request_Options).then(response => response.json()).then(response => this.$router.push('/Checkout/Success/'+response+'/'+checkout_Phone))
           this.input_Error = false;
-          this.$router.push('/Checkout/Success');
         }
       } catch (error) {
       }

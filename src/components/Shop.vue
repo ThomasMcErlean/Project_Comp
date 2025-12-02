@@ -1,6 +1,4 @@
 <script>
-import axios from 'axios';
-
 export default {
   data() {
     return {
@@ -35,7 +33,9 @@ export default {
       //Basket 
       basket: [],
       ascending_Descending_Button: "Ascending",
-      sorting: ["", false, ""],
+      sorting: ["", false, "Any Subject"],
+      range: 1,
+      query: ""
 
     };
   },
@@ -67,7 +67,6 @@ export default {
       }
     },
     price_Sort(price_Choice) {
-      //lessons=lessons.sort((a, b) => {return a.Price - b.Price})
       if (price_Choice == "priceHigh") {
         this.lessons = this.lessons.sort((a, b) => { return b.Price - a.Price })
       } else if (price_Choice == "priceLow") {
@@ -77,6 +76,8 @@ export default {
     },
     //Adds a lesson to the basket list
     add_To_Basket(lesson) {
+      const lesson_Index = this.lessons.findIndex((element) => element === lesson);
+      this.lessons[lesson_Index].Spaces = this.lessons[lesson_Index].Spaces - 1;
       if (!this.basket.includes(lesson)) {
         Object.defineProperty(lesson, "Quantity", { configurable: true, value: 1 });
         this.basket.push(lesson);
@@ -84,8 +85,8 @@ export default {
         const index = this.basket.findIndex((element) => element.Subject == lesson.Subject);
         let Basket_Item = this.basket[index];
         Object.defineProperty(Basket_Item, "Quantity", { value: this.basket[index].Quantity + 1 });
-        this.$forceUpdate();
       }
+      this.$forceUpdate();
     },
     //Removes a lesson from the basket list
     remove_From_Basket(lesson_Id) {
@@ -139,24 +140,27 @@ export default {
       formulae = Math.pow(Math.sin(Δ_lat / 2), 2) + Math.pow(Math.sin(Δ_long / 2), 2) * Math.cos(lat_1) * Math.cos(lat_2);
     },
     send_To_Checkout() {
-      console.log(this.basket);
       this.$emit("toggle-basket", this.basket);
-      this.$router.push("/Checkout");
+      this.$router.push("/Basket");
     },
     async search(query) {
-      const res = await fetch('http://localhost:3000/').then(response => response.json()).then(response => this.lessons = response);
+      const res = await fetch('https://project-comp-express-middleware.onrender.com/').then(response => response.json()).then(response => this.lessons = response);
     },
     async search2(event) {
       const query = event.target.value;
-      const res = await fetch('http://localhost:3000/search?'+ new URLSearchParams({
+      this.query = query;
+      const res = await fetch('https://project-comp-express-middleware.onrender.com/search?' + new URLSearchParams({
         search: query
       }).toString()).then(response => response.json()).then(response => this.lessons = response);
-      //const res = await axios.get("http://localhost:3000/search", { params: { search: query } }).then(response => (this.lessons=response.data));
+    },
+    setPlace(event) {
+      console.log(event);
+      console.log(this.test.lat());
     }
   },
   mounted() {
     try {
-      fetch('http://localhost:3000/').then(response => response.json()).then(response => this.lessons = response);
+      fetch('https://project-comp-express-middleware.onrender.com/').then(response => response.json()).then(response => this.lessons = response);
       console.log(this.lessons);
       console.log("oh yes!");
     } catch (err) {
@@ -191,7 +195,6 @@ export default {
         </div>
       </div>
       <div class="column-sm-12">
-        <input type="text float-start" placeholder="Search...">
         <!-- Button to open the basket sidebar -->
         <button v-if="basket.length > 0" class="btn btn-primary float-end" type="button" data-bs-toggle="offcanvas"
           data-bs-target="#basket-sidebar"><i class="fa-solid fa-basket-shopping"></i><i
@@ -280,6 +283,22 @@ export default {
                 </div>
               </div>
             </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne1"
+                  aria-expanded="true" aria-controls="collapseOne1">
+                  Location
+                </button>
+              </h2>
+              <div id="collapseOne1" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <GMapAutocomplete class="w-100" @place_changed="setPlace" />
+                  <label for="mileRange" class="form-label">Distance: {{ range }} miles</label>
+                  <input type="range" class="form-range" min="1" max="100" id="mileRange" v-model="range">
+                </div>
+              </div>
+            </div>
 
           </div>
         </div>
@@ -302,6 +321,7 @@ export default {
         </div>
         <!--Render lessons for user-->
         <div class="row row-cols-2">
+          <div v-if="this.lessons.length === 0">no results for "{{ query }}"</div>
           <div v-for="lesson in lessons" class="col">
             <!--Lessons rendered as bootstrap cards with all relevant information from the array-->
             <div class="card">

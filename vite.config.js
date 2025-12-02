@@ -10,16 +10,9 @@ export default defineConfig({
     vue(),
     vueDevTools(),
   ],
-  build: {
-        outDir: 'dist',
-        rollupOptions: {
-            input: 'index.html',
-        },
-    },
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
-   base: '/Project_Comp/'
 })

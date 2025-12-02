@@ -1,5 +1,6 @@
 <script>
 export default {
+  props: ["basket_Data"],
   data() {
     return {
       Auto_Complete: "",
@@ -31,11 +32,12 @@ export default {
 
       ],
       //Basket 
-      basket: [],
+      basket: this.basket_Data,
       ascending_Descending_Button: "Ascending",
       sorting: ["", false, "Any Subject"],
       range: 1,
-      query: ""
+      query: "",
+      sort: "Relevancy"
 
     };
   },
@@ -47,21 +49,15 @@ export default {
       lessons.forEach((element, index) => {
         if (element.Spaces === 0) {
           this.lessons.splice(index, 1);
-          console.log(element.Subject, 1);
         }
-        console.log(lessons.length);
       });
     },
     //Given a list and subject type it'll go through the list removing any subjects that aren't the given type
     filter_By_Subject(lessons, subject_Choice) {
       if (subject_Choice != "Any Subject") {
         for (let index = lessons.length - 1; index >= 0; index--) {
-          console.log(index);
-          console.log(subject_Choice, index)
           if (lessons[index].Subject != subject_Choice) {
             this.lessons.splice(index, 1);
-            console.log(subject_Choice, " removed")
-          } else {
           }
         }
       }
@@ -78,25 +74,72 @@ export default {
     add_To_Basket(lesson) {
       const lesson_Index = this.lessons.findIndex((element) => element === lesson);
       this.lessons[lesson_Index].Spaces = this.lessons[lesson_Index].Spaces - 1;
-      if (!this.basket.includes(lesson)) {
-        Object.defineProperty(lesson, "Quantity", { configurable: true, value: 1 });
-        this.basket.push(lesson);
+      if (!this.basket.some(item => item._id === lesson._id)) {
+        this.basket.push(Object.assign({}, lesson));
+        Object.defineProperty(this.basket[this.basket.length - 1], "Quantity", { configurable: true, value: 1 });
       } else {
-        const index = this.basket.findIndex((element) => element.Subject == lesson.Subject);
+        const index = this.basket.findIndex((element) => element._id == lesson._id);
         let Basket_Item = this.basket[index];
         Object.defineProperty(Basket_Item, "Quantity", { value: this.basket[index].Quantity + 1 });
+        Object.defineProperty(Basket_Item, "Price", { value: this.basket[index].Quantity * this.basket[index].Price });
       }
       this.$forceUpdate();
     },
-    //Removes a lesson from the basket list
-    remove_From_Basket(lesson_Id) {
-      if (this.basket[lesson_Id].Quantity === 1) {
-        this.basket.splice(lesson_Id, 1);
-      } else {
-        let Basket_Item = this.basket[lesson_Id];
-        console.log(this.basket[lesson_Id].Quantity)
-        Object.defineProperty(Basket_Item, "Quantity", { value: this.basket[lesson_Id].Quantity - 1 });
-        this.$forceUpdate();
+    subject_Sort_AZ(a, b) {
+      const subjectA = a.Subject.toUpperCase();
+      const subjectB = b.Subject.toUpperCase();
+      if (subjectA < subjectB) {
+        return -1;
+      }
+      if (subjectA > subjectB) {
+        return 1;
+      }
+    },
+    subject_Sort_ZA(a, b) {
+      const subjectA = a.Subject.toUpperCase();
+      const subjectB = b.Subject.toUpperCase();
+      if (subjectB < subjectA) {
+        return -1;
+      }
+      if (subjectB > subjectA) {
+        return 1;
+      }
+    },
+    location_Sort_AZ(a, b) {
+      const locationA = a.Location.toUpperCase();
+      const locationB = b.Location.toUpperCase();
+      if (locationA < locationB) {
+        return -1;
+      }
+      if (locationA > locationB) {
+        return 1;
+      }
+    },
+    location_Sort_ZA(a, b) {
+      const locationA = a.Subject.toUpperCase();
+      const locationB = b.Subject.toUpperCase();
+      if (locationB < locationA) {
+        return -1;
+      }
+      if (locationB > locationA) {
+        return 1;
+      }
+    },
+    sort_Apply(){
+      switch(this.sort){
+        case "Subject(a-z)":
+          this.lessons.sort(this.subject_Sort_AZ);
+          break;
+        case "Subject(z-a)":
+          this.lessons.sort(this.subject_Sort_ZA);
+          break;
+        case "Location(a-z)":
+           this.lessons.sort(this.location_Sort_AZ);
+           break;
+        case "Location(z-a)":
+          this.lessons.sort(this.location_Sort_ZA);
+           break;
+        default:
       }
     },
     reverse_Unreverse_Array(lessons) {
@@ -111,7 +154,6 @@ export default {
         /*The second position is related to the check box to only show available lessons 
         if this checkbox is called the function to remove unavailable lessons is called*/
         else if (i === 1) {
-          //Kate is an idiot fix this immediately 
           if (filters[i] === true) {
             this.out_Of_Spaces_Remove(this.lessons);
           }
@@ -139,7 +181,7 @@ export default {
       Δ_long = this.convert_To_Radians(Δ_long);
       formulae = Math.pow(Math.sin(Δ_lat / 2), 2) + Math.pow(Math.sin(Δ_long / 2), 2) * Math.cos(lat_1) * Math.cos(lat_2);
     },
-    send_To_Checkout() {
+    send_To_Basket() {
       this.$emit("toggle-basket", this.basket);
       this.$router.push("/Basket");
     },
@@ -160,9 +202,7 @@ export default {
   },
   mounted() {
     try {
-      fetch('https://project-comp-express-middleware.onrender.com/').then(response => response.json()).then(response => this.lessons = response);
-      console.log(this.lessons);
-      console.log("oh yes!");
+      fetch('https://project-comp-express-middleware.onrender.com/').then(response => response.json()).then(response => this.lessons = response).then(response => this.lessons_Copy = response);
     } catch (err) {
       console.log("oh no !" + err);
     }
@@ -173,32 +213,10 @@ export default {
 <template>
   <div class="container">
     <div class="row">
-      <!-- Offcanvas Sidebar -->
-      <div class="offcanvas offcanvas-end" id="basket-sidebar">
-        <div class="offcanvas-header">
-          <h1 class="offcanvas-title">Basket</h1>
-          <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
-        </div>
-        <!--Basket display-->
-        <div class="offcanvas-body" id="basket-sidebar">
-          <div v-for="(lesson, index) in basket" class="card">
-            <h3 class="card-title">{{ lesson.Subject }}</h3>
-            <div class="card-body">
-              <p class="card-text">Location: {{ lesson.Location }}</p>
-              <p class="card-text">Price: £{{ lesson.Price }}</p>
-              <p class="card-text">Available Spaces:{{ lesson.Spaces }}</p>
-              <p class="card-text">Quantity:{{ lesson.Quantity }}</p>
-              <button class="btn btn-danger" @click="remove_From_Basket(index)">Remove</button>
-            </div>
-          </div>
-          <button class="btn btn-secondary" type="button" @click="send_To_Checkout">A Button</button>
-        </div>
-      </div>
       <div class="column-sm-12">
-        <!-- Button to open the basket sidebar -->
-        <button v-if="basket.length > 0" class="btn btn-primary float-end" type="button" data-bs-toggle="offcanvas"
-          data-bs-target="#basket-sidebar"><i class="fa-solid fa-basket-shopping"></i><i
-            class="fa-solid fa-user"></i></button>
+        <!-- Button to go to the basket -->
+        <button v-if="basket.length > 0" class="btn btn-primary float-end" type="button" @click="send_To_Basket()"><i
+            class="fa-solid fa-basket-shopping"></i><i class="fa-solid fa-user"></i></button>
         <button v-if="basket.length === 0" class="btn btn-primary float-end" type="button" disabled><i
             class="fa-solid fa-basket-shopping"></i><i class="fa-solid fa-user"></i></button>
       </div>
@@ -319,6 +337,13 @@ export default {
           <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
           <input type="text float-start" class="form-control" placeholder="Search..." @keyup.enter="search2">
         </div>
+        <select name="sorts" id="sort-select" @change="sort_Apply()" v-model="sort">
+          <option value="Relevancy">Relevancy</option>
+          <option value="Subject(a-z)">Subject(a-z)</option>
+          <option value="Subject(z-a)">Subject(z-a)</option>
+          <option value="Location(a-z)">Location(a-z)</option>
+          <option value="Location(z-a)">Location(z-a)</option>
+        </select>
         <!--Render lessons for user-->
         <div class="row row-cols-2">
           <div v-if="this.lessons.length === 0">no results for "{{ query }}"</div>

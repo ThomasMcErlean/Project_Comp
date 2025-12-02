@@ -49,28 +49,28 @@ export default {
     test(phone_Input) {
       this.phone_Number = phone_Input;
     },
-    async space_Update(space_Basket){
+    async space_Update(space_Basket) {
       for (let i = 0; i < space_Basket.length; i++) {
-        const request_Options={
-            method: "PUT",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({_id:space_Basket[i]._id, Spaces:space_Basket[i].Spaces})
-          }
-          const response= await fetch("https://project-comp-express-middleware.onrender.com/lessons", request_Options);
+        const request_Options = {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ _id: space_Basket[i]._id, Spaces: space_Basket[i].Spaces })
+        }
+        const response = await fetch("https://project-comp-express-middleware.onrender.com/lessons", request_Options);
       }
     },
     async checkout(basket, checkout_Name, checkout_Phone) {
-      const order={name: checkout_Name, phone:checkout_Phone, basket:basket};
+      const order = { name: checkout_Name, phone: checkout_Phone, basket: basket };
       console.log(order);
       try {
         if (this.checkout_Test(checkout_Name, checkout_Phone)) {
           this.space_Update(basket);
-          const request_Options={
+          const request_Options = {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify(order)
           }
-          const response=await fetch("https://project-comp-express-middleware.onrender.com/orders", request_Options).then(response => response.json()).then(response => this.$router.push('/Checkout/Success/'+response+'/'+checkout_Phone))
+          const response = await fetch("https://project-comp-express-middleware.onrender.com/orders", request_Options).then(response => response.json()).then(response => this.$router.push('/Checkout/Success/' + response + '/' + checkout_Phone))
           this.input_Error = false;
         }
       } catch (error) {
@@ -82,7 +82,6 @@ export default {
 <template>
   <div class="container">
     <div class="row">
-      <p>{{ this.phone_Number }}</p>
       <!--Button to link to shopping page-->
       <div class="col-xs-4">
         <button class="btn btn-primary my-3" @click="this.$router.push('/')">Go back to shopping page</button>
@@ -103,27 +102,21 @@ export default {
         <p class="text-danger" v-if="input_Error === true">Please enter a valid phone number.</p>
         <h2>Basket</h2>
         <!--Displays users basket if there any items in the basket.-->
-        <div v-if="basket_Checkout.length > 0" v-for="lesson in basket_Checkout" class="col">
           <div class="card">
-            <h3 class="card-title">{{ lesson.Subject }}</h3>
-            <div class="card-body">
-              <p class="card-text">Location: {{ lesson.Location }}</p>
-              <p class="card-text">Price: £{{ lesson.Price }}</p>
-              <p class="card-text">Available Spaces:{{ lesson.Spaces }}</p>
-              <button class="btn btn-danger" @click="remove_From_Basket(lesson.id)">Remove</button>
-            </div>
-          </div>
-        </div>
-        <!--If the checkout is empty it'll display the Basket is empty text.-->
-        <div v-else>
-          <p>
-            <em>Basket is empty</em>
-          </p>
-        </div>
-        <!--Button to call the checkout function and validate checkout before sending the user to checkout confirm page.-->
-        <div class="col-xs-4">
-          <button type="button" class="btn btn-primary" @click="checkout(basket_Checkout, name, phone_Number)">Checkout</button>
-        </div>
+                    <div v-if="this.basket_Checkout.length === 0" class="card-body">Basket is empty.</div>
+                    <ul class="list-group">
+                        <li class="list-group-item" v-for="(lesson, index) in basket_Checkout">
+                            {{ lesson.Subject }}
+                            £{{ lesson.Price }}
+                            x{{ lesson.Quantity }}
+                        </li>
+                    </ul>
+                </div>
+      </div>
+      <!--Button to call the checkout function and validate checkout before sending the user to checkout confirm page.-->
+      <div class="col-xs-4">
+        <button type="button" class="btn btn-primary"
+          @click="checkout(basket_Checkout, name, phone_Number)">Checkout</button>
       </div>
     </div>
   </div>

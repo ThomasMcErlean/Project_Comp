@@ -13,7 +13,7 @@ const router= createRouter({
         {path: '/', component:Shop},
         {path: '/Checkout', component:Checkout},
         {path: '/Checkout/:confirmation/:orderId/:name', component:CheckoutConfirm, props: true},
-        {path: '/p/Basket', component:Basket, props:true}
+        {path: '/Basket', component:Basket, props:true}
     ]
 })
 const route=useRoute();

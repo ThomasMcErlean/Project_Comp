@@ -87,7 +87,7 @@ export default {
         <button class="btn btn-primary my-3" @click="this.$router.push('/')">Go back to shopping page</button>
       </div>
       <div class="col">
-        <h1>Checkout</h1>
+        <h1>Checkout </h1>
         <p>To complete checkout you must enter a name and a valid phone number</p>
         <!--Name input section-->
         <div class="col-xs-4">

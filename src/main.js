@@ -8,7 +8,7 @@ import PhoneInput from './components/PhoneInput.vue';
 import Basket from './components/Basket.vue'
 import VueGoogleMaps from  '@fawmi/vue-google-maps';
 const router= createRouter({
-    history: createWebHistory(),
+    history: createWebHistory('/Project_Comp/'),
     routes: [
         {path: '/', component:Shop},
         {path: '/Checkout', component:Checkout},

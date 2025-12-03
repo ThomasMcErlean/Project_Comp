@@ -10,10 +10,10 @@ import VueGoogleMaps from  '@fawmi/vue-google-maps';
 const router= createRouter({
     history: createWebHistory(),
     routes: [
-        {path: '/Project_Comp/', component:Shop},
-        {path: '/Project_Comp/Checkout', component:Checkout},
-        {path: '/Project_Comp/Checkout/:confirmation/:orderId/:name', component:CheckoutConfirm, props: true},
-        {path: '/Project_Comp/Basket', component:Basket, props:true}
+        {path: '/', component:Shop},
+        {path: '/Checkout', component:Checkout},
+        {path: '/Checkout/:confirmation/:orderId/:name', component:CheckoutConfirm, props: true},
+        {path: '/p/Basket', component:Basket, props:true}
     ]
 })
 const route=useRoute();

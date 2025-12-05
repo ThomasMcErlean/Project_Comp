@@ -125,6 +125,7 @@ export default {
         return 1;
       }
     },
+    //Calls sort functions based on v model variable sort
     sort_Apply(){
       switch(this.sort){
         case "Subject(a-z)":
@@ -167,27 +168,11 @@ export default {
         }
       }
     },
-    //function that converts degrees to radians
-    convert_To_Radians(degree) {
-      return degree * Math.PI / 180;
-    },
-    haversine_Formula(lat_1, long_1, lat_2, long_2) {
-      radius_Of_Earth = 6, 371;
-      //difference between 2 lattitude values given
-      Δ_lat = Math.abs(lat_1 - lat_2);
-      Δ_lat = this.convert_To_Radians(Δ_lat);
-      //difference between 2 longitude degrees given
-      Δ_long = Math.abs(long_1 - long_2);
-      Δ_long = this.convert_To_Radians(Δ_long);
-      formulae = Math.pow(Math.sin(Δ_lat / 2), 2) + Math.pow(Math.sin(Δ_long / 2), 2) * Math.cos(lat_1) * Math.cos(lat_2);
-    },
     send_To_Basket() {
       this.$emit("toggle-basket", this.basket);
       this.$router.push("/Basket");
     },
-    async search(query) {
-      const res = await fetch('https://project-comp-express-middleware.onrender.com/').then(response => response.json()).then(response => this.lessons = response);
-    },
+    //Sends search request to backend and updates lessons with response
     async search2(event) {
       const query = event.target.value;
       this.query = query;
@@ -195,10 +180,6 @@ export default {
         search: query
       }).toString()).then(response => response.json()).then(response => this.lessons = response);
     },
-    setPlace(event) {
-      console.log(event);
-      console.log(this.test.lat());
-    }
   },
   mounted() {
     try {
@@ -301,23 +282,6 @@ export default {
                 </div>
               </div>
             </div>
-            <div class="accordion-item">
-              <h2 class="accordion-header" id="headingOne">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne1"
-                  aria-expanded="true" aria-controls="collapseOne1">
-                  Location
-                </button>
-              </h2>
-              <div id="collapseOne1" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                  <GMapAutocomplete class="w-100" @place_changed="setPlace" />
-                  <label for="mileRange" class="form-label">Distance: {{ range }} miles</label>
-                  <input type="range" class="form-range" min="1" max="100" id="mileRange" v-model="range">
-                </div>
-              </div>
-            </div>
-
           </div>
         </div>
         <!--Apply filters-->

@@ -16,10 +16,8 @@ export default {
     it returns either true or false if the regex test is passed or failed*/
     name_Validation(name) {
       name = name.replace(/\s/g, "X");
-      console.log(name);
       const name_Regex = /^[a-z]+$/i;
       let name_Regex_Match = name_Regex.test(name);
-      console.log(name_Regex_Match);
       return name_Regex_Match;
     },
     /*Tests a given string phone number with a regex to match UK phone numbers
@@ -59,9 +57,9 @@ export default {
         const response = await fetch("https://project-comp-express-middleware.onrender.com/lessons", request_Options);
       }
     },
+    //Sends checkout request to backend if checkout.test returns true
     async checkout(basket, checkout_Name, checkout_Phone) {
       const order = { name: checkout_Name, phone: checkout_Phone, basket: basket };
-      console.log(order);
       try {
         if (this.checkout_Test(checkout_Name, checkout_Phone)) {
           this.space_Update(basket);

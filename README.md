@@ -30,3 +30,7 @@ npm run build
 ### Github Pages
 
 The page is hosted on github pages access via this link https://thomasmcerlean.github.io/Project_Comp/
+
+## Github link
+
+https://github.com/ThomasMcErlean/Project_Comp

@@ -5,32 +5,9 @@ export default {
     return {
       Auto_Complete: "",
       //Dummy list of lessons
-      lessons: [
-        { Subject: 'German', Location: 'NW0 0ZZ', Price: 40, Spaces: 0, Icon: 'fa-solid fa-language' },
-        { Subject: 'French', Location: 'NW0 0ZZ', Price: 40, Spaces: 5000, Icon: 'fa-solid fa-language' },
-        { Subject: 'Spanish', Location: 'NW0 0ZZ', Price: 60, Spaces: 5000, Icon: 'fa-solid fa-language' },
-        { Subject: 'Geography', Location: 'NW0 0ZZ', Price: 80, Spaces: 5000, Icon: 'fa-solid fa-earth-europe' },
-        { Subject: 'Math', Location: 'NW0 0ZZ', Price: 40, Spaces: 5000, Icon: 'fa-solid fa-calculator' },
-        { Subject: 'Design Technologies', Location: 'NW0 0ZZ', Price: 80, Spaces: 5000, Icon: 'fa-solid fa-ruler' },
-        { Subject: 'Textiles', Location: 'NW0 0ZZ', Price: '0', Spaces: 5000, Icon: 'fa-solid fa-ruler' },
-        { Subject: 'Sports', Location: 'NW0 0ZZ', Price: '0', Spaces: 5000, Icon: 'fa-solid fa-rug' },
-        { Subject: 'History', Location: 'NW0 0ZZ', Price: 40, Spaces: 5000, Icon: 'fa-solid fa-book' },
-        { Subject: 'Environmental Science', Location: 'NW0 0ZZ', Price: 60, Spaces: 0, Icon: 'fa-solid fa-seedling' },
-      ],
+      lessons: [],
       //Dummy Copy
-      lessons_Copy: [
-        { Subject: 'German', Location: 'NW0 0ZZ', Price: 40, Spaces: 0, Icon: 'fa-solid fa-language' },
-        { Subject: 'French', Location: 'NW0 0ZZ', Price: 40, Spaces: 5000, Icon: 'fa-solid fa-language' },
-        { Subject: 'Spanish', Location: 'NW0 0ZZ', Price: 60, Spaces: 5000, Icon: 'fa-solid fa-language' },
-        { Subject: 'Geography', Location: 'NW0 0ZZ', Price: 80, Spaces: 5000, Icon: 'fa-solid fa-earth-europe' },
-        { Subject: 'Math', Location: 'NW0 0ZZ', Price: 40, Spaces: 5000, Icon: 'fa-solid fa-calculator' },
-        { Subject: 'Design Technologies', Location: 'NW0 0ZZ', Price: 80, Spaces: 5000, Icon: 'fa-solid fa-ruler' },
-        { Subject: 'Textiles', Location: 'NW0 0ZZ', Price: '0', Spaces: 5000, Icon: 'fa-solid fa-ruler' },
-        { Subject: 'Sports', Location: 'NW0 0ZZ', Price: '0', Spaces: 5000, Icon: 'fa-solid fa-rug' },
-        { Subject: 'History', Location: 'NW0 0ZZ', Price: 40, Spaces: 5000, Icon: 'fa-solid fa-book' },
-        { Subject: 'Environmental Science', Location: 'NW0 0ZZ', Price: 60, Spaces: 0, Icon: 'fa-solid fa-seedling' },
-
-      ],
+      lessons_Copy: [],
       //Basket 
       basket: this.basket_Data,
       ascending_Descending_Button: "Ascending",
